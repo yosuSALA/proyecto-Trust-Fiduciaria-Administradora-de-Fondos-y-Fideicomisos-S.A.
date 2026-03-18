@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diagrama de Entregables – Trust Fiduciaria</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:   #0F2347;
+    --blue:   #1B3A6B;
+    --mid:    #2E5FA3;
+    --light:  #4A84D4;
+    --accent: #C8A951;
+    --gold2:  #E8C96A;
+    --white:  #F8F9FC;
+    --gray:   #8A96A8;
+    --line:   rgba(200,169,81,0.35);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--navy);
+    font-family: 'DM Sans', sans-serif;
+    color: var(--white);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── BACKGROUND TEXTURE ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background:
+      radial-gradient(ellipse 80% 50% at 10% 20%, rgba(46,95,163,0.18) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 90% 80%, rgba(200,169,81,0.08) 0%, transparent 55%);
+    pointer-events: none; z-index: 0;
+  }
+
+  .page {
+    position: relative; z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 56px 40px 80px;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 56px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--line);
+  }
+  .header-left {}
+  .label-tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: rgba(200,169,81,0.12);
+    border: 1px solid rgba(200,169,81,0.3);
+    padding: 4px 12px;
+    border-radius: 2px;
+    margin-bottom: 12px;
+  }
+  .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 34px;
+    font-weight: 900;
+    color: var(--white);
+    line-height: 1.15;
+  }
+  .header h1 span { color: var(--accent); }
+  .header-right {
+    text-align: right;
+    padding-top: 8px;
+  }
+  .client-box {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 6px;
+    padding: 14px 20px;
+  }
+  .client-box .cl { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gray); margin-bottom: 4px; }
+  .client-box .cn { font-size: 13px; font-weight: 600; color: var(--white); }
+  .client-box .cc { font-size: 11px; color: var(--accent); margin-top: 2px; }
+
+  /* ── SECTION TITLE ── */
+  .sec-title {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .sec-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+
+  /* ── PIPELINE ROW ── */
+  .pipeline {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    margin-bottom: 52px;
+    position: relative;
+  }
+
+  .pipe-step {
+    flex: 1;
+    position: relative;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.5s ease forwards;
+  }
+  .pipe-step:nth-child(1) { animation-delay: 0.1s; }
+  .pipe-step:nth-child(2) { animation-delay: 0.2s; }
+  .pipe-step:nth-child(3) { animation-delay: 0.3s; }
+  .pipe-step:nth-child(4) { animation-delay: 0.4s; }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .pipe-card {
+    height: 100%;
+    background: linear-gradient(155deg, rgba(27,58,107,0.6) 0%, rgba(15,35,71,0.8) 100%);
+    border: 1px solid rgba(74,132,212,0.2);
+    border-radius: 10px;
+    padding: 22px 18px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s;
+    margin: 0 6px;
+  }
+  .pipe-card:hover {
+    border-color: rgba(200,169,81,0.5);
+    transform: translateY(-3px);
+  }
+  .pipe-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--mid), var(--accent));
+    border-radius: 10px 10px 0 0;
+  }
+
+  .pipe-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px;
+    font-weight: 900;
+    color: rgba(74,132,212,0.15);
+    position: absolute;
+    top: 8px; right: 14px;
+    line-height: 1;
+  }
+  .pipe-icon {
+    width: 38px; height: 38px;
+    background: rgba(46,95,163,0.3);
+    border: 1px solid rgba(74,132,212,0.3);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    margin-bottom: 12px;
+  }
+  .pipe-phase {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+  .pipe-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 10px;
+    line-height: 1.3;
+  }
+  .pipe-items {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .pipe-items li {
+    font-size: 11px;
+    color: rgba(248,249,252,0.65);
+    padding-left: 14px;
+    position: relative;
+    line-height: 1.4;
+  }
+  .pipe-items li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: var(--mid);
+    font-size: 9px;
+    top: 1px;
+  }
+  .pipe-duration {
+    margin-top: 14px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255,255,255,0.07);
+    font-size: 10px;
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  /* arrow between steps */
+  .pipe-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(74,132,212,0.4);
+    font-size: 18px;
+    padding: 0;
+    flex-shrink: 0;
+    width: 0;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* ── DASHBOARDS GRID ── */
+  .dash-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 52px;
+  }
+
+  .dash-card {
+    background: rgba(27,58,107,0.35);
+    border: 1px solid rgba(74,132,212,0.15);
+    border-radius: 8px;
+    padding: 14px 14px 12px;
+    transition: all 0.25s;
+    opacity: 0;
+    animation: fadeUp 0.4s ease forwards;
+    cursor: default;
+  }
+  .dash-card:hover {
+    background: rgba(46,95,163,0.3);
+    border-color: rgba(200,169,81,0.4);
+    transform: translateY(-2px);
+  }
+  .dash-card:nth-child(1)  { animation-delay: 0.05s; }
+  .dash-card:nth-child(2)  { animation-delay: 0.10s; }
+  .dash-card:nth-child(3)  { animation-delay: 0.15s; }
+  .dash-card:nth-child(4)  { animation-delay: 0.20s; }
+  .dash-card:nth-child(5)  { animation-delay: 0.25s; }
+  .dash-card:nth-child(6)  { animation-delay: 0.30s; }
+  .dash-card:nth-child(7)  { animation-delay: 0.35s; }
+  .dash-card:nth-child(8)  { animation-delay: 0.40s; }
+  .dash-card:nth-child(9)  { animation-delay: 0.45s; }
+  .dash-card:nth-child(10) { animation-delay: 0.50s; }
+  .dash-card:nth-child(11) { animation-delay: 0.55s; }
+  .dash-card:nth-child(12) { animation-delay: 0.60s; }
+
+  .dash-n {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    color: var(--accent);
+    margin-bottom: 5px;
+  }
+  .dash-name {
+    font-size: 11.5px;
+    font-weight: 500;
+    color: var(--white);
+    line-height: 1.35;
+    margin-bottom: 7px;
+  }
+  .dash-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .tag {
+    font-size: 9px;
+    font-weight: 500;
+    padding: 2px 6px;
+    border-radius: 3px;
+    letter-spacing: 0.5px;
+  }
+  .tag-m  { background: rgba(46,95,163,0.35);  color: #7BAADF; border: 1px solid rgba(74,132,212,0.2); }
+  .tag-a  { background: rgba(200,169,81,0.15); color: var(--accent); border: 1px solid rgba(200,169,81,0.2); }
+  .tag-pdf{ background: rgba(26,122,74,0.2);  color: #5DC98A; border: 1px solid rgba(26,122,74,0.25); }
+  .tag-kpi{ background: rgba(180,60,60,0.2);  color: #F08080; border: 1px solid rgba(180,60,60,0.2); }
+
+  /* ── DELIVERABLES FOOTER ROW ── */
+  .deliverables {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 52px;
+  }
+  .deliv-card {
+    background: rgba(15,35,71,0.7);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 8px;
+    padding: 16px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    opacity: 0;
+    animation: fadeUp 0.5s ease forwards;
+    transition: border-color 0.25s;
+  }
+  .deliv-card:hover { border-color: rgba(200,169,81,0.3); }
+  .deliv-card:nth-child(1) { animation-delay: 0.1s; }
+  .deliv-card:nth-child(2) { animation-delay: 0.2s; }
+  .deliv-card:nth-child(3) { animation-delay: 0.3s; }
+  .deliv-card:nth-child(4) { animation-delay: 0.4s; }
+  .deliv-icon { font-size: 22px; }
+  .deliv-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--white);
+    line-height: 1.3;
+  }
+  .deliv-desc {
+    font-size: 10.5px;
+    color: var(--gray);
+    line-height: 1.5;
+  }
+  .deliv-format {
+    margin-top: auto;
+    font-size: 9.5px;
+    font-weight: 500;
+    color: var(--accent);
+    letter-spacing: 0.5px;
+  }
+
+  /* ── PRICING FOOTER ── */
+  .pricing-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(90deg, rgba(27,58,107,0.8) 0%, rgba(46,95,163,0.5) 100%);
+    border: 1px solid rgba(200,169,81,0.25);
+    border-radius: 10px;
+    padding: 22px 32px;
+    gap: 24px;
+  }
+  .pricing-item { text-align: center; }
+  .pricing-item .pi-label {
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 4px;
+  }
+  .pricing-item .pi-val {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--white);
+  }
+  .pricing-item .pi-val.accent { color: var(--accent); font-size: 28px; }
+  .pricing-divider {
+    width: 1px;
+    height: 40px;
+    background: rgba(255,255,255,0.1);
+  }
+  .pricing-note {
+    font-size: 10px;
+    color: var(--gray);
+    text-align: center;
+    max-width: 200px;
+    line-height: 1.5;
+  }
+
+  /* ── FLOW LINE ── */
+  .flow-connector {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: -8px 0 8px;
+    gap: 8px;
+    color: rgba(74,132,212,0.3);
+    font-size: 11px;
+    letter-spacing: 1px;
+  }
+  .flow-connector::before,
+  .flow-connector::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(74,132,212,0.2), transparent);
+  }
+  .flow-connector span {
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(74,132,212,0.5);
+    white-space: nowrap;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-left">
+      <div class="label-tag">Diagrama de Entregables</div>
+      <h1>Flujo del Proyecto<br><span>ETL SUPERCIAS + Power BI</span></h1>
+    </div>
+    <div class="header-right">
+      <div class="client-box">
+        <div class="cl">Cliente</div>
+        <div class="cn">Trust Fiduciaria S.A.</div>
+        <div class="cc">Ing. Ma. Cecilia Viejó · Gerente Financiera</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PIPELINE PHASES -->
+  <div class="sec-title">Fases de Desarrollo</div>
+  <div class="pipeline">
+    <div class="pipe-step">
+      <div class="pipe-card">
+        <div class="pipe-num">1</div>
+        <div class="pipe-icon">🎯</div>
+        <div class="pipe-phase">Fase 1</div>
+        <div class="pipe-title">Kickoff & Levantamiento</div>
+        <ul class="pipe-items">
+          <li>Reunión inicial con gerencia</li>
+          <li>Recopilación catálogo de cuentas</li>
+          <li>Validación de KPIs requeridos</li>
+          <li>Acceso y revisión datos SUPERCIAS</li>
+          <li>Definición de estructura final</li>
+        </ul>
+        <div class="pipe-duration">⏱ Semana 1</div>
+      </div>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-card">
+        <div class="pipe-num">2</div>
+        <div class="pipe-icon">⚙️</div>
+        <div class="pipe-phase">Fase 2 – 3</div>
+        <div class="pipe-title">ETL & Base de Datos</div>
+        <ul class="pipe-items">
+          <li>Script Python extracción SUPERCIAS</li>
+          <li>Filtro sector fideicomisos</li>
+          <li>Base de datos estructurada</li>
+          <li>Interfaz de ejecución simple</li>
+          <li>Actualización incremental mensual</li>
+        </ul>
+        <div class="pipe-duration">⏱ Semanas 2 – 4</div>
+      </div>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-card">
+        <div class="pipe-num">3</div>
+        <div class="pipe-icon">📊</div>
+        <div class="pipe-phase">Fase 4</div>
+        <div class="pipe-title">Dashboards Power BI</div>
+        <ul class="pipe-items">
+          <li>12 reportes + gráficas</li>
+          <li>Vista mensual y anual</li>
+          <li>Medidas DAX y ratios</li>
+          <li>Exportación PDF automática</li>
+          <li>Diseño visual y pruebas</li>
+        </ul>
+        <div class="pipe-duration">⏱ Semanas 5 – 7</div>
+      </div>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-card">
+        <div class="pipe-num">4</div>
+        <div class="pipe-icon">🚀</div>
+        <div class="pipe-phase">Fase 5 – 6</div>
+        <div class="pipe-title">Entrega & Capacitación</div>
+        <ul class="pipe-items">
+          <li>Ajustes finales con el cliente</li>
+          <li>Sesión de capacitación al equipo</li>
+          <li>Guía de usuario y documentación</li>
+          <li>Video-guía de uso</li>
+          <li>Soporte post-entrega 30 días</li>
+        </ul>
+        <div class="pipe-duration">⏱ Semanas 8 – 10</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONNECTOR -->
+  <div class="flow-connector"><span>12 reportes entregados en Power BI</span></div>
+
+  <!-- DASHBOARDS GRID -->
+  <div class="sec-title" style="margin-top:28px;">Reportes y Dashboards Solicitados</div>
+  <div class="dash-grid">
+
+    <div class="dash-card">
+      <div class="dash-n">01</div>
+      <div class="dash-name">Estado de Situación</div>
+      <div class="dash-tags">
+        <span class="tag tag-m">Mensual</span>
+        <span class="tag tag-a">Anual</span>
+      </div>
+    </div>
+
+    <div class="dash-card">
+      <div class="dash-n">02</div>
+      <div class="dash-name">Estado de Resultados</div>
+      <div class="dash-tags">
+        <span class="tag tag-m">Mensual</span>
+        <span class="tag tag-a">Anual</span>
+      </div>
+    </div>
+
+    <div class="dash-card">
+      <div class="dash-n">03</div>
+      <div class="dash-name">Total de Ingresos</div>
+      <div class="dash-tags">
+        <span class="tag tag-m">Mensual</span>
+        <span class="tag tag-a">Anual</span>
+      </div>
+    </div>
+
+    <div class="dash-card">
+      <div class="dash-n">04</div>
+      <div class="dash-name">Ingresos Adm. Fiduciaria</div>
+      <div class="dash-tags">
+        <span class="tag tag-m">Mensual</span>
+        <span class="tag tag-a">Anual</span>
+      </div>
+    </div>
+
+    <div class="dash-card">
+      <div class="dash-n">05</div>
+      <div class="dash-name">Ingresos Adm. Fiduciaria por Tipo</div>
+      <div class="dash-tags">
+        <span class="tag tag-m">Mensual</span>
+        <span class="tag tag-a">Anual</span>
+      </div>
+    </div>
+
+    <div class="dash-card">
+      <div class="dash-n">06</div>
+      <div class="dash-name">Ingresos por Fondos</div>
+      <div class="dash-tags">
+        <span class="tag tag-m">Mensual</span>
+        <span class="tag tag-a">Anual</span>
+      </div>
+    </div>
+
+    <div class="dash-card">
+      <div class="dash-n">07</div>
+      <div class="dash-name">Total de Gastos</div>
+      <div class="dash-tags">
+        <span class="tag tag-m">Mensual</span>
+        <span class="tag tag-a">Anual</span>
+      </div>
+    </div>
+
+    <div class="dash-card">
+      <div class="dash-n">08</div>
+      <div class="dash-name">Capital</div>
+      <div class="dash-tags">
+        <span class="tag tag-m">Mensual</span>
+        <span class="tag tag-a">Anual</span>
+      </div>
+    </div>
+
+    <div class="dash-card">
+      <div class="dash-n">09</div>
+      <div class="dash-name">Patrimonio</div>
+      <div class="dash-tags">
+        <span class="tag tag-m">Mensual</span>
+        <span class="tag tag-a">Anual</span>
+      </div>
+    </div>
+
+    <div class="dash-card">
+      <div class="dash-n">10</div>
+      <div class="dash-name">Negocios Administrados por Tipo</div>
+      <div class="dash-tags">
+        <span class="tag tag-m">Mensual</span>
+        <span class="tag tag-a">Anual</span>
+      </div>
+    </div>
+
+    <div class="dash-card">
+      <div class="dash-n">11</div>
+      <div class="dash-name">Ratios Financieros</div>
+      <div class="dash-tags">
+        <span class="tag tag-kpi">KPIs</span>
+        <span class="tag tag-m">Mensual</span>
+        <span class="tag tag-a">Anual</span>
+      </div>
+    </div>
+
+    <div class="dash-card">
+      <div class="dash-n">12</div>
+      <div class="dash-name">Reporte Resumen Automático</div>
+      <div class="dash-tags">
+        <span class="tag tag-pdf">PDF Auto</span>
+        <span class="tag tag-m">Mensual</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CONNECTOR -->
+  <div class="flow-connector"><span>Entregables finales del proyecto</span></div>
+
+  <!-- DELIVERABLES -->
+  <div class="sec-title" style="margin-top:28px;">Entregables Finales</div>
+  <div class="deliverables">
+
+    <div class="deliv-card">
+      <div class="deliv-icon">🐍</div>
+      <div class="deliv-title">Script ETL Python</div>
+      <div class="deliv-desc">Código funcional con interfaz de ejecución. Filtra los 15M de filas de SUPERCIAS al sector fideicomisos.</div>
+      <div class="deliv-format">.py · ejecutable .exe</div>
+    </div>
+
+    <div class="deliv-card">
+      <div class="deliv-icon">🗄️</div>
+      <div class="deliv-title">Base de Datos Estructurada</div>
+      <div class="deliv-desc">Datos del sector limpios y organizados, listos para conectar a Power BI con actualización mensual.</div>
+      <div class="deliv-format">SQLite · CSV estructurado</div>
+    </div>
+
+    <div class="deliv-card">
+      <div class="deliv-icon">📈</div>
+      <div class="deliv-title">Archivo Power BI</div>
+      <div class="deliv-desc">12 dashboards completos con vistas mensuales y anuales, medidas DAX y exportación PDF automática.</div>
+      <div class="deliv-format">.pbix · Power BI Desktop</div>
+    </div>
+
+    <div class="deliv-card">
+      <div class="deliv-icon">📚</div>
+      <div class="deliv-title">Documentación & Capacitación</div>
+      <div class="deliv-desc">Guía de usuario paso a paso, video-guía y sesión de capacitación al equipo de Trust Fiduciaria.</div>
+      <div class="deliv-format">.pdf · .docx · MP4</div>
+    </div>
+
+  </div>
+
+  <!-- PRICING BAR -->
+  <div class="pricing-bar">
+    <div class="pricing-item">
+      <div class="pi-label">Valor de Mercado</div>
+      <div class="pi-val" style="text-decoration:line-through; opacity:0.45;">$2.500</div>
+    </div>
+    <div class="pricing-divider"></div>
+    <div class="pricing-item">
+      <div class="pi-label">Precio Especial de Lanzamiento</div>
+      <div class="pi-val accent">USD $1.600</div>
+    </div>
+    <div class="pricing-divider"></div>
+    <div class="pricing-item">
+      <div class="pi-label">Anticipo al Inicio (30%)</div>
+      <div class="pi-val">$480</div>
+    </div>
+    <div class="pricing-divider"></div>
+    <div class="pricing-item">
+      <div class="pi-label">Pago Final al Entregar (70%)</div>
+      <div class="pi-val">$1.120</div>
+    </div>
+    <div class="pricing-divider"></div>
+    <div class="pricing-note">El cliente paga la mayor parte solo cuando el sistema está funcionando · A cambio se solicita carta de referencia</div>
+  </div>
+
+</div>
+</body>
+</html>
